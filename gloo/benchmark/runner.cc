@@ -279,7 +279,12 @@ void Runner::run(BenchmarkFn<T>& fn, size_t n) {
   std::vector<std::unique_ptr<RunnerJob>> jobs;
   for (auto i = 0; i < options_.threads; i++) {
     auto& benchmark = benchmarks[i];
-    auto fn = [&benchmark] { benchmark->run(); };
+    int rank = options_.contextRank;
+    auto fn = [&benchmark, rank] {
+      std::this_thread::sleep_for(std::chrono::milliseconds(3 * 100 * rank));
+      std::cout << "start benchmark->run(), my rank:" << rank << std::endl;
+      benchmark->run();
+    };
     auto job = make_unique<RunnerJob>(fn, iterations);
     jobs.push_back(std::move(job));
   }

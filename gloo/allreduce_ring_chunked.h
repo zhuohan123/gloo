@@ -82,6 +82,7 @@ class AllreduceRingChunked : public Algorithm {
 
   void run() {
     // Reduce specified pointers into ptrs_[0]
+    std::cout << "Rank " << this->contextRank_ << " in run()" << std::endl;
     for (int i = 1; i < ptrs_.size(); i++) {
       fn_->call(ptrs_[0], ptrs_[i], count_);
     }
